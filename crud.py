@@ -1,4 +1,4 @@
-from model import db, User,Blog,Comments, connect_to_db
+from model import db, User,Blog,Comment,connect_to_db
 
 
 def create_user(email, password):
@@ -15,7 +15,7 @@ def create_user(email, password):
 def create_blog(title, overview):
     """Create and return a new blog."""
 
-    blog=Blogs(title=title,
+    blog=Blog(title=title,
                   overview=overview)
 
     db.session.add(blog)
@@ -27,7 +27,7 @@ def create_blog(title, overview):
 def create_comment(user,response):
     """Create and return a new comment."""
 
-    Comments=comment(user=user, response=response)
+    comment=Comment(user=user, response=response)
 
     db.session.add(comment)
     db.session.commit()

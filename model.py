@@ -12,62 +12,62 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(25))
-    # last_name = db.Column(db.String(25))
     email = db.Column(db.String(25), unique=True)
     password = db.Column(db.String(25), unique=True)
 
-    blogs =db.relationship('Blog', backref='users')
+    blogs = db.relationship('Blog', backref='users')
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
     def get_id(self):
         return (self.user_id)
 
-# class Blog(db.Model):
-#     """A blog."""
+class Blog(db.Model):
+    """A blog."""
 
-#     __tablename__ = "blogs"
+    __tablename__ = "blogs"
 
-#     blogs_id = db.Column(db.Integer,primary_key=True)
-#     blogs_created_datetime = db.Column(db.Integer)
-#     blogs_title = db.Column(db.String(25))
+    blog_id = db.Column(db.Integer,primary_key=True)
+    blog_created_datetime = db.Column(db.Integer)
+    blog_title = db.Column(db.String(25))
+# refereing to only one blog
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 
-#     # user_id = db.Column(db.Integer,foreign_key=True)
+    blogentries = db.relationship('BlogEntry', backref='blogs')
+    # users = db.relationship('User', backref='blogs')
 
-#     blogentries = db.relationship('Blog', backref='blogentries')
-#     users = db.relationship('User', backref='blogs')
-#     def __repr__(self):
-#         return f'<Blog blogs_id={self.blogs_id} blogs_created_datetime={self.blogs_created_datetime} blog_title{self.blog_title}>'
+    def __repr__(self):
+        return f'<Blog blogs_id={self.blogs_id} blogs_created_datetime={self.blogs_created_datetime} blog_title{self.blog_title}>'
 
-# class BlogEntries(db.Model):
-#     """A entry."""
+class BlogEntry(db.Model):
+    """A entry."""
 
-#     __tablename__ = "blogentries"
+    __tablename__ = "blogentries"
 
-#     entry_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-#     blogs_id = db.Column(db.Integer,foreign_key=True)
-#     entry_datetime = db.Column(db.Integer)
+    entry_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    blog_id = db.Column(db.Integer, db.ForeignKey('blogs.blog_id'))
+    entry_datetime = db.Column(db.Integer)
 
-#     blogcomments = db.relationship('BlogEntries', backref='blogcomments', secondary='entry_id')
+    # blogcomments = db.relationship('BlogEntries', backref='blogentries', secondary='entry_id')
 
-#     def __repr__(self):
-#         return f'<User user_id={self.user_id} email={self.email}>'
+    def __repr__(self):
+        return f'<BlogEntry={self.entry_id} blog={self.blog_id}>'
 
-class BlogComment(db.Model):
+class Comment(db.Model):
     """A comment."""
 
     __tablename__ = "blogcomments"
 
     comment_id = db.Column(db.Integer,autoincrement=True, primary_key=True)
      
-    entry_datetime= db.Column(db.text()
-    blog_id= db.Column(db.)
-    user_id= db.Column(db.)
-    comment_datetime= db.Column(db.)
+    comment_datetime= db.Column(db.String)
+    blog_id= db.Column(db.ForeignKey('blogs.blog_id'))
+    user_id= db.Column(db.ForeignKey('users.user_id'))
+    
     
     
     def __repr__(self):
-        return f'<User user_id={__blank__} email={__blank__}>'
+        return f'<comment user_id={self.user_id} comment={self.comment_id}>'# 
 
 
 
@@ -89,8 +89,9 @@ if __name__ == '__main__':
     from server import app
 
     connect_to_db(app)
+    db.create_all()
 
-
+# ===================================================================
 # Helper functions
 
 # def connect_to_db(app):
